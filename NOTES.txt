@@ -1,0 +1,20 @@
+NOTES
+
+#####################################
+# deleting all temperateure loggings for a specefic recepy
+#####################################
+
+python manage.py shell
+
+from rezepte.models import Rezept, Malz, Maischen, Hopfenplan, Temperaturlogging
+
+recepy = Rezept.objects.get(id=1)
+
+# all loggings
+Temperaturlogging.objects.filter(rezept=recepy)
+
+# count all loggings
+len(Temperaturlogging.objects.filter(rezept=recepy))
+
+# delete all loggings
+Temperaturlogging.objects.filter(rezept=recepy).delete()

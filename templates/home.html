@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+
+  <div class="item item-1"> 
+  	<h1 style="text-align:center">Brautagebuch von Pixelbräu</h1>
+  </div>
+
+  <div class="item item-10"> 
+	<p>
+	{% for o in objects %}
+		{% if o.logging %}
+			<p style="color:#FF3333;">
+			<a href="{{ o.get_absolute_detail_url }}">
+			{{o.titel}} vom {{o.datum}}</a> °</p><br>
+		{% else %}
+			<a href="{{ o.get_absolute_detail_url }}">
+			{{o.titel}} vom {{o.datum}}</a><br>
+		{% endif %}
+	{% endfor %}
+	</p>
+  </div>
+
+  <div class="item footer"> 
+	<p>	
+		<a href="/create" style="color:#313131;">NEW	
+		</a>
+	</p>
+  </div>
+</div>
+
+{% endblock %}

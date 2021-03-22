@@ -1,0 +1,280 @@
+:root{
+	--mainText:#716e77; /* h1 */
+	--secondaryText:#716e77; /* p */
+  --thirdaryText:#716e77;
+
+  /* 
+  --bg_main:#acacbd;
+  --bg_header:#2C3043;
+  --bg_sensor:#bcc4d1;
+  --bg_malz:#ede591;
+  --bg_hopfen:#77cc6d;
+  */
+  --bg_main:#313131;
+  --bg_header:#186f3d;
+  --bg_sensor:#414141;
+  --bg_rezept:#525252;
+}
+
+
+.container{
+  display: grid;
+  grid-template-columns: 1fr 330px 330px;
+  column-gap: 5px;
+  row-gap: 5px;
+} 
+
+/* HEADER */
+.item-1 {
+  grid-column: 1/4;
+  padding: 20px;
+  background-color: var(--bg_header);
+  text-align: left;
+}
+/* AKTUELLER PROZESS */
+.item-2 {
+  grid-column: 1/2;
+  padding: 10px;
+  text-align: left;
+  background-color: var(--bg_sensor);
+}
+/* SENSOR 1 */
+.item-3 {
+  grid-column: 2/3;
+  padding: 10px;
+  background-color: var(--bg_sensor);
+}
+/* SENSOR 2 */
+.item-4 {
+  grid-column: 3/4;
+  padding: 10px;
+  background-color: var(--bg_sensor);
+}
+
+/* ZUTATEN */
+.item-5 {
+  grid-row: 3 / 6;
+  text-align: left;
+  padding: 10px;
+  background-color: var(--bg_rezept);
+}
+
+/* MAISCHEN */
+.item-6 {
+  grid-column: 2/4;
+  background-color: var(--bg_rezept);
+}
+
+/* HOPFENKOCHEN */
+.item-7 {
+  grid-column: 2/3;
+  background-color: var(--bg_rezept);
+}
+
+/* HOPFENSTOPFEN */
+.item-8 {
+  grid-column: 3/4;
+  background-color: var(--bg_rezept);
+}
+
+/* GÄRUNG */
+.item-9 {
+  grid-column: 2/4;
+  background-color: var(--bg_rezept);
+}
+
+/* SETTINGS REZEPT */
+.item-10 {
+  grid-column: 1/4;
+  background-color: var(--bg_rezept);
+}
+
+/* SETTINGS MALZ */
+.item-11 {
+  grid-column: 1/4;
+  background-color: var(--bg_rezept);
+}
+
+/* SETTINGS MAISCHEN */
+.item-12 {
+  grid-column: 1/4;
+  background-color: var(--bg_rezept);
+}
+
+/* SETTINGS HOPFEN */
+.item-13 {
+  grid-column: 1/4;
+  background-color: var(--bg_rezept);
+}
+
+.item-highcharts {
+  grid-column: 1/5;
+  font-family: 'Helvetica', monospace;
+  padding: 10px;
+}
+
+.footer{
+  grid-column: 1/5;
+  background-color: var(--bg_header);
+}
+
+@media only screen and (max-width: 1000px){
+  .container {
+  grid-template-columns: 1fr 1fr;
+} 
+  /* HEADER */
+  .item-1 {
+    grid-column: 1/3;
+    grid-row-start:1; 
+    grid-row-end:2; 
+  }
+  /* AKTEULLER PROZESS */
+  .item-2 {
+    grid-column: 1/3;
+    grid-row-start:2; 
+    grid-row-end:3; 
+  }
+  /* SENSOR 1 */
+  .item-3 {
+    grid-column: 1/2;
+    grid-row-start:3; 
+    grid-row-end:4; 
+  }
+  /* SENSOR 2 */
+  .item-4 {
+    grid-column: 2/3;
+    grid-row-start:3; 
+    grid-row-end:4; 
+  }
+  /* ZUATETN */
+   .item-5 {
+    grid-column: 1/3;
+    grid-row-start:4; 
+    grid-row-end:5;
+    padding: 10px;
+    text-align: left;
+
+  }
+  /* MAISCHEN */
+   .item-6 {
+    grid-column: 1/3;
+    grid-row-start:5; 
+    grid-row-end:6;
+    padding: 10px;
+    text-align: left;
+  }
+  /* HOPFENKOCHEN */
+   .item-7 {
+    grid-column: 1/2;
+    grid-row-start:6; 
+    grid-row-end:7;
+    padding: 10px;
+    text-align: left;
+  }
+  /* HOPFENSTOPFEN */
+   .item-8 {
+    grid-column: 2/3;
+    grid-row-start:6; 
+    grid-row-end:7;
+    padding: 10px;
+    text-align: left;
+  }
+  /* GÄRUNG */
+   .item-9 {
+    grid-column: 1/3;
+    grid-row-start:7; 
+    grid-row-end:8;
+    padding: 10px;
+    text-align: left;
+  }
+  /* SETTINGS */
+   .item-10 {
+    grid-column: 1/3;
+    grid-row-start:8; 
+    grid-row-end:9;
+    padding: 10px;
+    text-align: left;
+  }
+}
+
+
+html, body{
+  background-color: var(--bg_main);
+	padding: 10px;
+	margin: 0px;
+  text-align: center;
+	scroll-behavior: smooth;
+}
+
+
+h1{
+	color: var(--bg_main);
+	font-family: 'Russo One', sans-serif;
+	font-weight: 500;
+	font-size: 36px;
+}
+
+h2, h3, h4, h5, h6, strong{
+	color: var(--bg_header);
+	font-family: 'Russo One', sans-serif;
+	font-weight: 500;
+}
+
+
+p, li, span, label, input, textarea{
+	color: var(--bg_main);
+	font-family: 'Roboto Mono', monospace;
+}
+
+ul {
+  list-style-type: square;
+  list-style-position: outside;
+  list-style-image: none;
+}
+
+a:link{
+  color: var(--bg_header);
+  font-family: 'Roboto Mono', monospace;
+  text-decoration: none; 
+  font-weight: bold;
+}
+
+a:visited {
+  color: var(--bg_header);
+  font-family: 'Roboto Mono', monospace;
+  text-decoration: none; 
+  font-weight: bold;
+}
+
+h2{
+  font-size: 26px;
+}
+
+
+.highcharts-root {
+    font-family: 'Roboto Mono';
+}
+
+.highcharts-background {
+  fill: var(--bg_rezept);
+}
+/* Titles */
+.highcharts-title {
+  fill: var(--bg_rezept);
+}
+
+/*border: 3px solid var(--bg_malz);*/
+.button {
+  background-color: var(--bg_main);
+  border: solid 1px var(--bg_header);
+  color: var(--bg_header);
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family : 'Arial';
+  font-size: 14px;
+  margin: 2px 2px;
+  cursor: pointer;
+}
+

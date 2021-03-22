@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+<!-- REZEPT -->
+{% block content %}
+
+
+
+<div class="container">
+
+  <div class="item item-1"> 
+	<h1>{{rezept.titel}}</h1>
+
+	<p style="color:#313131;">	| {{rezept.datum}} | {{rezept.stil}} | </p>
+   </div>
+
+  <!-- PROZESS -->
+  <div class="item item-2"> 
+	{% if rezept.logging %}
+		<h2>Aktueller Prozess: {{rezept.aktuellerProzess}}</h2>
+		<h2>Solltemperatur: {{temperaturen.2}} °C</h2>
+		<p>Dauer im aktuellen Prozess: {{rezept.zeitstempelProzess|timesince}} am {{rezept.aktuellerProzess}}</p>
+	{% else %}
+		<h2>Logging deaktiviert</h2>
+	{% endif %}
+  </div>
+
+  <!-- SENSOR 1 -->
+  <div class="item item-3"> 
+  	
+  	<!-- gut -->
+  	{% if controlInstructions.0 == 1 %}
+		<style>
+		.item-3 {
+		  background-color: #186f3d;
+		}  	
+		 </style>
+	{% endif %}
+
+	<!-- zu kalt -->
+  	{% if controlInstructions.0 == 2 %}
+		<style>
+		.item-3 {
+		  background-color: #2E94B9;
+		}  	
+		 </style>
+	{% endif %}
+
+	<!-- zu warm -->
+	{% if controlInstructions.0 == 3 %}
+		<style>
+		.item-3 {
+		  background-color: #ca3e47;
+		}  	
+		 </style>
+	{% endif %}
+	
+	{% if rezept.logging %}
+		<h2 style="color:#313131;">SENSOR 1</h2>
+		<h2 style="color:#313131;">{{temperaturen.0}} °C</h2>
+	{% else %}
+		<h2>SENSOR 1</h2>
+		<h2>{{temperaturen.0}} °C</h2>
+	{% endif %}
+
+
+  </div>
+
+  <!-- SENSOR 2 -->
+  <div class="item item-4"> 
+
+  	<!-- gut -->
+  	{% if controlInstructions.1 == 1 %}
+		<style>
+		.item-4 {
+		  background-color: #186f3d;
+		}  	
+		 </style>
+	{% endif %}
+
+	<!-- zu kalt -->
+  	{% if controlInstructions.1 == 2 %}
+		<style>
+		.item-4 {
+		  background-color: #2E94B9;
+		}  	
+		 </style>
+	{% endif %}
+
+	<!-- zu warm -->
+	{% if controlInstructions.1 == 3 %}
+	<style>
+	.item-4 {
+	  background-color: #ca3e47;
+	}  	
+	 </style>
+	{% endif %}
+
+	{% if rezept.logging %}
+		<h2 style="color:#313131;">SENSOR 2</h2>
+		<h2 style="color:#313131;">{{temperaturen.1}} °C</h2>
+	{% else %}
+		<h2>SENSOR 2</h2>
+		<h2>{{temperaturen.1}} °C</h2>
+	{% endif %}
+  </div>
+
+
+  <div class="item item-5">
+	<p>{{rezept.notizen}}</p>
+	{% if rezept.url != None %}
+		<a href="{{rezept.url}}">
+		Hier gehts zum Original</a>
+	{% endif %}
+
+  	<h2>ZUTATEN</h2>
+	<p>
+		<h3>Brauwasser</h3>
+		<ul>
+			<li>Hauptguss: {{rezept.hauptguss|floatformat:"0"}} l</li>
+			<li>Nachguss: {{rezept.nachguss|floatformat:"0"}} l</li>
+			<li>Gesamt: {{rezept.hauptguss|add:rezept.nachguss}} l</li>
+		</ul>	
+	</p>
+	<p>
+		<h3>Malze</h2>
+		<ul>
+		{% for m in malz %}
+			<li> 
+				{{ m.sorte }}: {{ m.menge }} kg 
+				{% if m.notiz != None %}
+					| {{ m.notiz }}
+				{% endif %}
+			</li>
+		{% endfor %}
+		</ul>
+	</p>
+	<p>
+		<h3>Hopfen</h3>
+		<ul>
+		{% for h, m in hopfen %}
+			<li> 
+				{{ h|capfirst }}:  {{ m|floatformat:"0" }} g
+			</li>
+		{% endfor %}
+		</ul>
+	</p>
+  </div>
+
+  <div class="item item-6"> 
+	<h2>Maischeplan</h1>
+	<ul>
+	{% for m in maische %}
+		<li> {{ m.prozess|capfirst }} bei {{ m.temperatur|floatformat:"0" }} °C für {{ m.dauer|floatformat:"0" }} min 
+			{% if m.notiz != None %}
+				| {{ m.notiz }}
+			{% endif %}
+		</li>
+	{% endfor %}
+	</ul>
+  </div>
+
+  <div class="item item-7"> 
+  	<h3>Würzekochen: {{rezept.hopfenkochzeit}} min</h2>
+	<ul>
+	{% for d, hk in hopfenkochen %}
+		{% for h, m in hk %}
+		<li> 
+			{{ d|floatformat:"0" }} min: {{ h|capfirst }} {{ m|floatformat:"0" }} g
+		</li>
+		{% endfor %}
+	{% endfor %}
+	</ul>
+
+
+	{% if whirlpool.0 != None %}
+		<h3>Whirlpool</h2>
+
+		<ul>
+		{% for h, m in whirlpool %}
+			<li> 
+				{{ h|capfirst }} {{ m|floatformat:"0" }} g
+			</li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+  </div>
+
+  <div class="item item-8"> 
+	<h3>Stopfen</h2>
+	<ul>
+	{% for h, m in stopfen %}
+		<li> 
+			{{ h|capfirst }} {{ m|floatformat:"0" }} g
+		</li>
+	{% endfor %}
+	</ul>
+	{% if stopfen.0 == None %}
+		<p> Gibt nicht´s zu Stopfen. </p>
+	{% endif %}
+  </div>
+
+
+  <div class="item item-9"> 
+	<h2>Gärung</h2>
+	<ul>
+		<li>Hefe: {{rezept.hefe}}</li>
+		<li>Stammwürze: {{rezept.stammwuerze}} °P</li>
+		<li>Restextrakt: {{rezept.restextrakt}} °P</li>
+		<li>Alkoholgehalt: {{rezept.alkohol}} vol.%</li>
+	</ul>
+
+	<h2>Abfüllung</h2>
+	<ul>
+		<li>Karbonisierung: {{rezept.karbonisierung}} g CO2/l</li>
+	</ul>
+  </div>
+
+  <div class="item item-10"> 
+	<form action="{% url 'logging_toggle' rezept.pk %}" method="POST">
+		{% csrf_token %}
+		<label>Logging</label>
+		<button type="submit", name="rezept_id", value="{{ rezept.pk }}", class="button">{{rezept.logging}}</button>
+	</form>
+	<p>Interval | {{rezept.intervall}} sek</p>
+  </div>
+
+  <div class="item footer"> 
+	<p>	
+		<a href="../../" style="color:#313131;">HOME
+		</a>
+		|
+		<a href="{{ rezept.get_absolute_temp_url }}" style="color:#313131;">GRAPH
+		</a>
+		|
+		<a href="{{ rezept.get_absolute_edit_url }}" style="color:#313131;">EDIT	
+		</a>
+	</p>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+

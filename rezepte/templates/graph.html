@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+<!-- REZEPT -->
+{% block content %}
+
+<div class="container">
+
+  <div class="item item-1"> 
+	<h1>{{rezept.titel}}</h1>
+
+	<p style="color:#313131;">	| {{rezept.datum}} | {{rezept.stil}} | </p>
+   </div>
+
+<div class="item item-highcharts" id='hs-container'></div>
+
+<div class="item footer"> 
+	<a href="{{ rezept.get_absolute_detail_url }}" style="color:#313131;">BACK</a>
+</div>
+
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script>
+Highcharts.chart('hs-container', {{ chart|safe }});
+</script>
+
+</div>
+
+{% endblock %}
