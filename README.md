@@ -32,10 +32,10 @@ Password: admin
 ![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Overview.png "Overview")
 
 ### Detail Page
-![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Overview.png "DetailView")
+![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/RecepyDetail.png "DetailView")
 
 ### Graph Page
-![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Overview.png "Graph")
+![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Graph.png "Graph")
 
 ## Future Goals
 * better way to modify recepies
