@@ -3,17 +3,17 @@ I'm a passionate homebrewer and like to code. Because I like the handcraft part 
 
 ## Features
 * creating recepies 
-** Name
-** Style
-** OG & FG
-** Mashingplan
-** Hopplan
+  * Name
+  * Style
+  * OG & FG
+  * Mashingplan
+  * Hopplan
 * store temperature in a database
-** creating graphs with Highcharts
+  * creating graphs with Highcharts
 * guidance during brewing like:
-** mashing in at 58 °C
-** keeping 63 °C for 13 min
-** you are at fermentation step since 3 days and 7 hours
+  * mashing in at 58 °C
+  * keeping 63 °C for 13 min
+  * you are at fermentation step since 3 days and 7 hours
 
 ## Requirements
 * python3
@@ -26,3 +26,7 @@ Start webserver: python3 manage.py runserver
 --> localhost:8000/admin
 Username: admin
 Password: admin
+
+** Some impressions
+
+![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Graph.png "Graph")
