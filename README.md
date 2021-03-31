@@ -27,6 +27,18 @@ Start webserver: python3 manage.py runserver
 Username: admin
 Password: admin
 
-** Some impressions
+## Some Impressions
+### Overview Page
+![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Overview.png "Overview")
 
-![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Graph.png "Graph")
+### Detail Page
+![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Overview.png "DetailView")
+
+### Graph Page
+![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Overview.png "Graph")
+
+## Future Goals
+* better way to modify recepies
+* english version
+* hover over ingredients to get details about it
+* hover over beerstyles to get details about it
