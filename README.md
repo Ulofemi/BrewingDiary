@@ -1,5 +1,5 @@
 # Digital Diary on the Raspberry Pi for Homebrewers 
-I'm a passionate homebrewer and like to code. Because I like the handcraft part by brewing beer the goal was not to automate very much. So I tried several solutions like the [craftbeerpi](https://github.com/Manuel83/craftbeerpi) and other projects but none of these fitted for my needs. The result is an online Diary. It is coded  in python3 and django. One Requirement is a temperature sensor. I used a DS18B20. 
+I'm a passionate homebrewer and like to code. Because I like the handcraft part by brewing beer the goal was not to automate very much. So I tried several solutions like the [craftbeerpi](https://github.com/Manuel83/craftbeerpi) and other projects but none of these fitted my needs. The result is an online Diary for homebrewers. It is coded  in python3 and django. One Requirement is a temperature sensor. I used a DS18B20. 
 
 ## Features
 * creating recepies 
