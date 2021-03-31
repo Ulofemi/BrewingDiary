@@ -1,14 +1,28 @@
-# BrewingDiary
-Online Brewing Diary programmed with python3 and django.
+# Digital Diary on the Raspberry Pi for Homebrewers 
+I'm a passionate homebrewer and like to code. Because I like the handcraft part by brewing beer the goal was not to automate very much. So I tried several solutions like the [craftbeerpi](https://github.com/Manuel83/craftbeerpi) and other projects but none of these fitted for my needs. The result is an online Diary. It is coded  in python3 and django. One Requirement is a temperature sensor. I used a DS18B20. 
 
-It's supposed to run it on a Raspberry Pi so you can add temperature-sensors like DS18B20 to get the temperature while brewing beer. The Temperature gets stored in a database. The graph is created by highcharts.
+## Features
+* creating recepies 
+** Name
+** Style
+** OG & FG
+** Mashingplan
+** Hopplan
+* store temperature in a database
+** creating graphs with Highcharts
+* guidance during brewing like:
+** mashing in at 58 °C
+** keeping 63 °C for 13 min
+** you are at fermentation step since 3 days and 7 hours
 
 ## Requirements
 * python3
 * django
+* raspberry pi
+* ds18b20
 
 ## Info
 Start webserver: python3 manage.py runserver
---> localhost:8000
+--> localhost:8000/admin
 Username: admin
 Password: admin
