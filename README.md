@@ -37,6 +37,9 @@ Password: admin
 ### Graph Page
 ![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Graph.png "Graph")
 
+### Statistic Page - Example
+![alt text](https://github.com/Ulofemi/BrewingDiary/blob/main/pic_demo/Stat.png "Stat")
+
 ## Future Goals
 * better way to modify recepies
 * english version
