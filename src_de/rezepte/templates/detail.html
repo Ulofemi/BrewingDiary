@@ -24,6 +24,14 @@
 	{% else %}
 		<h2>Logging deaktiviert</h2>
 	{% endif %}
+
+	<form action="{% url 'logging_toggle' rezept.pk %}" method="POST">
+		{% csrf_token %}
+		<label>Logging</label>
+		<button type="submit", name="rezept_id", value="{{ rezept.pk }}", class="btn btn-outline-dark btn-mine">{{rezept.logging}}</button>
+	</form>
+	<p>Interval | {{rezept.intervall}} sek</p>
+
   </div>
 
   <!-- SENSOR 1 -->
@@ -106,15 +114,16 @@
 	{% endif %}
   </div>
 
-
+  <!-- ZUTATEN -->
   <div class="item item-5">
+  	<h2>Info</h2>
 	<p>{{rezept.notizen}}</p>
 	{% if rezept.url != None %}
 		<a href="{{rezept.url}}">
 		Hier gehts zum Original</a>
 	{% endif %}
 
-  	<h2>ZUTATEN</h2>
+  	<h2>Zutaten</h2>
 	<p>
 		<h3>Brauwasser</h3>
 		<ul>
@@ -124,7 +133,7 @@
 		</ul>	
 	</p>
 	<p>
-		<h3>Malze</h2>
+		<h3>Malze</h3>
 		<ul>
 		{% for m in malz %}
 			<li> 
@@ -148,8 +157,9 @@
 	</p>
   </div>
 
+  <!-- Maicheplan -->
   <div class="item item-6"> 
-	<h2>Maischeplan</h1>
+	<h2>Maischeplan</h2>
 	<ul>
 	{% for m in maische %}
 		<li> {{ m.prozess|capfirst }} bei {{ m.temperatur|floatformat:"0" }} °C für {{ m.dauer|floatformat:"0" }} min 
@@ -161,8 +171,10 @@
 	</ul>
   </div>
 
-  <div class="item item-7"> 
-  	<h3>Würzekochen: {{rezept.hopfenkochzeit}} min</h2>
+  <!-- Hopfenplan -->
+  <div class="item item-7">
+  	<h2>Hopfenplan</h2>
+  	<h3>Würzekochen: {{rezept.hopfenkochzeit}} min</h3>
 	<ul>
 	{% for d, hk in hopfenkochen %}
 		{% for h, m in hk %}
@@ -173,9 +185,8 @@
 	{% endfor %}
 	</ul>
 
-
 	{% if whirlpool.0 != None %}
-		<h3>Whirlpool</h2>
+		<h3>Whirlpool</h3>
 
 		<ul>
 		{% for h, m in whirlpool %}
@@ -185,13 +196,11 @@
 		{% endfor %}
 		</ul>
 	{% endif %}
-  </div>
 
-  <div class="item item-8"> 
-	<h3>Stopfen</h2>
+	<h3>Stopfen</h3>
 	<ul>
 	{% for h, m in stopfen %}
-		<li> 
+		<li>
 			{{ h|capfirst }} {{ m|floatformat:"0" }} g
 		</li>
 	{% endfor %}
@@ -201,29 +210,17 @@
 	{% endif %}
   </div>
 
-
-  <div class="item item-9"> 
+  <!-- Gärung -->
+  <div class="item item-9">
 	<h2>Gärung</h2>
 	<ul>
 		<li>Hefe: {{rezept.hefe}}</li>
 		<li>Stammwürze: {{rezept.stammwuerze}} °P</li>
 		<li>Restextrakt: {{rezept.restextrakt}} °P</li>
 		<li>Alkoholgehalt: {{rezept.alkohol}} vol.%</li>
-	</ul>
-
-	<h2>Abfüllung</h2>
-	<ul>
+		<li>Bittere: {{rezept.bittere}} IBU</li>
 		<li>Karbonisierung: {{rezept.karbonisierung}} g CO2/l</li>
 	</ul>
-  </div>
-
-  <div class="item item-10"> 
-	<form action="{% url 'logging_toggle' rezept.pk %}" method="POST">
-		{% csrf_token %}
-		<label>Logging</label>
-		<button type="submit", name="rezept_id", value="{{ rezept.pk }}", class="button">{{rezept.logging}}</button>
-	</form>
-	<p>Interval | {{rezept.intervall}} sek</p>
   </div>
 
   <div class="item footer"> 

@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.db.models import Avg, Count, Min, Sum
+from django.db.models import Avg, Count, Min, Sum, Max
+from django.db.models import Q
 
 import datetime
 import time
@@ -22,7 +23,6 @@ import random
 def rezept_detail_view(request, id):
 	# getting a recepy by id or error 404
 	recepy = get_object_or_404(Rezept, id=id)
-	
 	# getting malt, mash and hopplan by recepy id
 	malt = Malz.objects.filter(rezept=recepy.pk)
 	mash = Maischen.objects.filter(rezept=recepy.pk)
@@ -75,10 +75,12 @@ def rezept_detail_view(request, id):
 	# if logging is activated --> estimate target temperature
 	if recepy.logging:
 		# temperatures is a list of temperatures measured by sensors
+		print(type(temperatures[1]))
 		targetTemperature = Automation(recepy, temperatures)
 		
 		# check controlInstructions
 		for i in range(len(controlInstructions)):
+			targetTemperature = float(targetTemperature)
 			# too cold if 3 K below target
 			if targetTemperature - temperatures[i] > 3:
 				controlInstructions[i] = 2
@@ -197,7 +199,7 @@ def rezept_update_view(request, id=id):
 		formHopfen.save()
 
 	context = {
-		'formRezept': formRezept,
+		'form': formRezept,
 		'formMalz': formMalz,
 		'formMaischen': formMaischen,
 		'formHopfen': formHopfen,
@@ -228,6 +230,45 @@ def loggingToggleView(request, id):
 
 	return HttpResponseRedirect(reverse("rezept", kwargs={"id": id}))
 
+
+def stats_view(request, *args, **kwargs):
+	#recepy_all = Rezept.objects.all()
+	beer_amount = Rezept.objects.aggregate(Sum('zielvolumen'))
+	malt_amount = Malz.objects.aggregate(Sum('menge'))
+	malt_amount_per_liter = malt_amount['menge__sum'] / beer_amount['zielvolumen__sum']
+	hop_amount = Hopfenplan.objects.aggregate(Sum('menge'))
+	hop_amount_per_liter = hop_amount['menge__sum'] / beer_amount['zielvolumen__sum']
+
+	ibu_high = Rezept.objects.aggregate(Max('bittere'))
+	ibu_low = Rezept.objects.exclude(bittere=0).aggregate(Min('bittere'))
+	sw_high = Rezept.objects.aggregate(Max('stammwuerze'))
+	sw_low = Rezept.objects.exclude(stammwuerze=0).aggregate(Min('stammwuerze'))
+
+	recepy_ibu_high = Rezept.objects.get(bittere=ibu_high['bittere__max'])
+	recepy_ibu_low = Rezept.objects.get(bittere=ibu_low['bittere__min'])
+	recepy_sw_high = Rezept.objects.get(stammwuerze=sw_high['stammwuerze__max'])
+	recepy_sw_low = Rezept.objects.get(stammwuerze=sw_low['stammwuerze__min'])
+
+
+	dump_pie = get_hops_amount()
+	dump_bar = get_hops_recepy_amount()
+	dump_pie_malts = get_malts_amount()
+
+	context = {
+		'beer_amount': beer_amount['zielvolumen__sum'],
+		'malt_amount': malt_amount['menge__sum'],
+		'malt_amount_liter': malt_amount_per_liter,
+		'hop_amount': hop_amount['menge__sum'],
+		'hop_amount_liter': hop_amount_per_liter,
+		'ibu_high': recepy_ibu_high,
+		'ibu_low': recepy_ibu_low,
+		'sw_high': recepy_sw_high,
+		'sw_low': recepy_sw_low,
+		'chart_pie': dump_pie,
+		'chart_bar': dump_bar,
+		'dump_pie_malts': dump_pie_malts
+	}
+	return render(request, "statistics.html", context)
 #################################################################################
 # FUNCITONS
 #################################################################################
@@ -239,8 +280,8 @@ def GetTemperature():
 	# result is a list of temperatures
 	result = []
 	if debug:
-		result.append(random.randrange(70,90))
-		result.append(random.randrange(70,90))
+		result.append(random.randrange(15,35))
+		result.append(random.randrange(15,35))
 	else: 
 		sensors = []
 		# name of sensors ds18b20 
@@ -444,3 +485,185 @@ def Automation(rezept, temperaturen):
 
 	return targetTemperature
 
+
+def get_hops_amount():
+	colors = Get_Colors()
+	hops_all = Hopfenplan.objects.order_by('hopfen').values('hopfen').distinct()
+
+	series = []
+	for idx, h in enumerate(hops_all):
+		color = colors[idx % len(colors)]
+		hopfenplans = Hopfenplan.objects.filter(hopfen=h['hopfen'])
+		recepies_different = hopfenplans.values('rezept').distinct()
+		amount_all = hopfenplans.values('menge')
+		hopfen_sum = 0
+		for amount in amount_all:
+			hopfen_sum = hopfen_sum + amount['menge']
+
+		s = {
+			'name': str(h['hopfen']),
+			'y': float(hopfen_sum),
+			'sliced': True,
+			'color': color
+		}
+		series.append(s)
+
+	chart_pie = {
+		'chart': {'type': 'pie',
+				  'style': {
+					  'fontFamily': 'Arial',
+					  'color': '#7EB2DD'}
+				  },
+		'tooltip': {'pointFormat': '<b>{point.y:.0f} g</b> <br> <b>{point.percentage:.0f}%</b>'},
+		'title': {'text': 'Hopfenanteile von Pixelbräu',
+				  'style': {
+					  'color': '#7EB2DD'}
+				  },
+		'series': [{'name': 'Hopfen',
+					'data': series,
+					'dataLabels': {
+						'enabled': 'true',
+						'style': {
+							'color': '#7EB2DD',
+							'textOutline': 'transparent'}
+					}}]
+	}
+
+	return json.dumps(chart_pie)
+
+
+def get_malts_amount():
+	colors = Get_Colors()
+	malts_all = Malz.objects.order_by('sorte').values('sorte').distinct()
+	series = []
+	for idx, m in enumerate(malts_all):
+		color = colors[idx % len(colors)]
+		malts = Malz.objects.filter(sorte=m['sorte'])
+		amount_all = malts.values('menge')
+
+		malts_sum = 0
+
+		for malt in amount_all:
+			print(malt)
+			malts_sum = malts_sum + malt['menge']
+
+		s = {
+			'name': str(m['sorte']),
+			'y': float(malts_sum),
+			'sliced': True,
+			'color': color
+		}
+		series.append(s)
+
+	chart_pie = {
+		'chart': {'type': 'pie',
+				  'style': {
+					  'fontFamily': 'Arial',
+					  'color': '#7EB2DD'}
+				  },
+		'tooltip': {'pointFormat': '<b>{point.y:.0f} g</b> <br> <b>{point.percentage:.0f}%</b>'},
+		'title': {'text': 'Malzanteile von Pixelbräu',
+				  'style': {
+					  'color': '#7EB2DD'}
+				  },
+		'series': [{'name': 'Malz',
+					'data': series,
+					'dataLabels': {
+						'enabled': 'true',
+						'style': {
+							'color': '#7EB2DD',
+							'textOutline': 'transparent'}
+					}}]
+	}
+
+	return json.dumps(chart_pie)
+
+
+def get_hops_recepy_amount():
+	colors = Get_Colors()
+	hops_all = Hopfenplan.objects.order_by('hopfen').values('hopfen').distinct()
+
+	xAxisCategories = []
+	data = []
+	for idx, h in enumerate(hops_all):
+		xAxisCategories.append(h['hopfen'])
+		color = colors[idx % len(colors)]
+		hopfenplans = Hopfenplan.objects.filter(hopfen=h['hopfen'])
+		recepies_different = hopfenplans.values('rezept').distinct()
+		d = [str(h['hopfen']), len(recepies_different)]
+		data.append(d)
+		print(len(recepies_different))
+
+	# creating chart
+	chart_bar = {
+		'chart': {'type': 'bar',
+				  'style': {
+					  'fontFamily': 'Arial',
+					  'color': '#7EB2DD'}
+				  },
+		'title': {'text': 'Hopfeneinsatz in Rezepten'},
+		'yAxis': {'min': 0,
+				  'title': {
+					  'text': 'Anzahl Rezepte',
+					  'align': 'high'},
+				  'labels': {
+					  'style': {
+						  'color': '#7EB2DD'}
+				  }},
+		'tooltip': {'pointFormat': '<b>{point.y:.0f} Rezepte</b>'},
+		'series': [{
+			'name': 'Hopfen',
+			'data': data}]
+	}
+
+	# return chart to json
+	return json.dumps(chart_bar)
+
+def Get_Colors():
+    colors = [
+        '#34568B',
+        '#FF6F61',
+        '#6B5B95',
+        '#009B77',
+        '#D65076',
+        '#5B5EA6',
+        '#9B2335',
+        '#DFCFBE',
+        '#98B4D4',
+        '#f39c12',
+        '#2ecc71',
+        '#cb4335',
+        '#2980b9',
+        '#7b241c',
+        '#943126',
+        '#633974',
+        '#5b2c6f',
+        '#1a5276',
+        '#21618c',
+        '#117864',
+        '#0e6655',
+        '#196f3d',
+        '#1d8348',
+        '#9a7d0a',
+        '#9c640c',
+        '#935116',
+        '#873600',
+        '#DFFF00',
+        '#FFBF00',
+        '#FF7F50',
+        '#DE3163',
+        '#9FE2BF',
+        '#40E0D0',
+        '#6495ED',
+        '#CCCCFF'
+    ]
+    random.shuffle(colors)
+    return colors
+
+
+"""
+print('##########################')
+print('Hopfen: {}'.format(h['hopfen']))
+print('Anzahl in Rezepten: {}'.format(len(all_recepies)))
+print('Gesamtmenge: {}'.format(hopfen_sum))
+"""

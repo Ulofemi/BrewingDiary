@@ -9,7 +9,7 @@
   	<h1 style="text-align:center">Brautagebuch von Pixelbräu</h1>
   </div>
 
-  <div class="item item-10"> 
+  <div class="item item-newrecepy">
 	<p>
 	{% for o in objects %}
 		{% if o.logging %}
@@ -26,8 +26,9 @@
 
   <div class="item footer"> 
 	<p>	
-		<a href="/create" style="color:#313131;">NEW	
-		</a>
+		<a href="/create" style="color:#313131;">NEW</a>
+		|
+		<a href="/stat" style="color:#313131;">Stats</a>
 	</p>
   </div>
 </div>

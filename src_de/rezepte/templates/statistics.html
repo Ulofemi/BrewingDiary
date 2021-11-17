@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+<!-- REZEPT -->
+{% block content %}
+
+<div class="container">
+
+  <div class="item item-1"> 
+	<h1>Pixelbräu Statistik</h1>
+   </div>
+
+    <div class="item item-newrecepy">
+        <h2>Facts</h2>
+        <p>
+            Gesamtes Biervolumen: {{beer_amount}} l <br>
+            Gesamte Malzmenge: {{malt_amount|floatformat:0}} kg | {{malt_amount_liter|floatformat:3}} kg/l<br>
+            Gesamte Hopfenmenge: {{hop_amount}} g | {{hop_amount_liter|floatformat:1}} g/l<br>
+        </p>
+	    <h2>Stammwürze</h2>
+        <p>
+            Maximale Stammwürze: {{sw_high.titel}} vom {{sw_high.datum}} mit {{sw_high.stammwuerze}} °P bzw. {{sw_high.alkohol}} vol. %<br>
+            Minimale Stammwürze: {{sw_low.titel}} vom {{sw_low.datum}} mit {{sw_low.stammwuerze}} °P bzw. {{sw_low.alkohol}} vol. %
+        </p>
+        <h2>Bittere</h2>
+        <p>
+            Maximale Bittere: {{ibu_high.titel}} vom {{ibu_high.datum}} mit {{ibu_high.bittere}} IBU <br>
+            Minimale Bittere: {{ibu_low.titel}} vom {{ibu_low.datum}} mit {{ibu_low.bittere}} IBU
+        </p>
+	</div>
+
+<div class="item item-highcharts" id='hs-container'></div>
+<div class="item item-highcharts-1" id='hs-container-1'></div>
+<div class="item item-highcharts-2" id='hs-container-2'></div>
+
+
+<div class="item footer"> 
+	<a href="../">HOME</a>
+</div>
+
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script>Highcharts.chart('hs-container', {{ chart_pie|safe }});</script>
+<script>Highcharts.chart('hs-container-1', {{ chart_bar|safe }});</script>
+<script>Highcharts.chart('hs-container-2', {{ dump_pie_malts|safe }});</script>
+
+</div>
+
+{% endblock %}

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
 
 	<div class="item item-1"> 
 		{% if edit %}
@@ -11,15 +12,29 @@
 		{% endif %}
 	</div>
 
-	<div class="item item-10"> 
+	<div class="item item-newrecepy">
 	<h2>Grundeinstellungen</h2>
 	<form action="." method='POST'>{% csrf_token %}
-	    {{ formRezept.as_p }}
+	    {{ form.as_p }}
 	    <input type='submit' value='Save' />
 	</form>
+		<br>
 	</div>
 
-	<div class="item item-11"> 
+	<div class="item footer">
+		{% if edit %}
+			<p><a href="{{ rezept.get_absolute_detail_url }}" style="color:#313131;">BACK</p>
+		{% endif %}
+		{% if not edit %}
+			<p><a href="../" style="color:#313131;">HOME</p>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
+
+
+<!--
+	<div class="item item-11">
 		{% if edit %}
 			<h2>Malz</h2>
 			<form action="." method='POST'>{% csrf_token %}
@@ -29,7 +44,7 @@
 		{% endif %}
 	</div>
 
-	<div class="item item-12"> 
+	<div class="item item-12">
 		{% if edit %}
 			<h2>Maischen</h2>
 			<form action="." method='POST'>{% csrf_token %}
@@ -39,7 +54,7 @@
 		{% endif %}
 	</div>
 
-	<div class="item item-13"> 
+	<div class="item item-13">
 		{% if edit %}
 			<h2>Hopfen</h2>
 			<form action="." method='POST'>{% csrf_token %}
@@ -48,18 +63,4 @@
 			</form>
 		{% endif %}
 	</div>
-
-	<div class="item footer"> 
-		{% if edit %}
-			<p>	
-				<a href="{{ rezept.get_absolute_detail_url }}" style="color:#313131;">BACK
-			</p>
-		{% endif %}
-		{% if not edit %}
-			<p>	
-				<a href="../" style="color:#313131;">HOME
-			</p>
-		{% endif %}
-	</div>
-
-{% endblock %}
+-->
